@@ -1,0 +1,43 @@
+{
+    "output_file": "persian_wordcloud.png",
+    "width": 1000,
+    "height": 800,
+    "background_color": "white",
+    "mask_path": null,
+    "max_words": 1000,
+    "min_font_size": 8,
+    "max_font_size": 300,
+    "relative_scaling": 1.0,
+    "prefer_horizontal": 0.3,
+    "random_state": 42,
+    "collocations": false,
+    "repeat": true,
+    "colormap": "plasma",
+    "mode": "RGBA",
+    "dpi": 300,
+    "color_mode": "custom_colors",
+    "custom_colors": {
+        "hue": 30,
+        "saturation": 80,
+        "lightness_range": [40, 80]
+    },
+    "stopwords": [
+        "و", "که", "در", "به", "از", "با", "برای", "این", "آن", "را", "است", "بود", "شد", "خواهد", "دارد",
+        "the", "and", "or", "but", "in", "on", "at", "to", "for", "of", "with", "by", "is", "are", "was", "were"
+    ],
+    "font_paths": [
+        "fonts/Vazir-Regular.ttf",
+        "fonts/Vazir-Medium.ttf",
+        "fonts/Vazir-Bold.ttf",
+        "fonts/Vazir.ttf",
+        "fonts/Vazir.otf",
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+        "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf"
+    ],
+    "smart_sizing": {
+        "extra_large_multiplier": 8,
+        "large_multiplier": 6,
+        "medium_multiplier": 4,
+        "small_multiplier": 2
+    }
+}

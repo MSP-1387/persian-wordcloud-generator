@@ -4,7 +4,6 @@
     "height": 808,
     "background_color": "white",
     "mask_path": "mask.png",
-    "input_file": "words.txt",
     "max_words": 5000,
     "min_font_size": 2,
     "max_font_size": 800,

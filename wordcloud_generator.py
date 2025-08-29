@@ -97,23 +97,6 @@ def create_persian_wordcloud(text_array, config_file="config.json", output_file=
     stopwords = set(config.get("stopwords", []))
     font_paths = config.get("font_paths", [])
     smart_sizing_config = config.get("smart_sizing", {})
-    input_file = config.get("input_file")
-    
-    # Check if input file is specified and exists
-    if input_file and os.path.exists(input_file):
-        print(f"Reading words from file: {input_file}")
-        try:
-            with open(input_file, 'r', encoding='utf-8') as f:
-                file_content = f.read()
-            # Split by lines and filter empty lines
-            text_array = [line.strip() for line in file_content.split('\n') if line.strip()]
-            print(f"Loaded {len(text_array)} lines from file")
-        except Exception as e:
-            print(f"Error reading file {input_file}: {e}")
-            print("Using default sample texts...")
-    else:
-        if input_file:
-            print(f"Input file {input_file} not found, using default sample texts...")
     
     # Join all strings and clean the text
     full_text = ' '.join(text_array)

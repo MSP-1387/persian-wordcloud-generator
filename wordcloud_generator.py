@@ -35,6 +35,34 @@ def create_random_color_func(hue, saturation, lightness_range):
         return f'#{int(rgb[0]*255):02x}{int(rgb[1]*255):02x}{int(rgb[2]*255):02x}'
     return random_color_func
 
+def process_mask_image(mask_path, debug=False):
+    """
+    Process mask image using the simple, working approach from wordcloud_with_mask.py
+    Returns: (mask_array, image_colors, success_message)
+    """
+    if not mask_path or not os.path.exists(mask_path):
+        return None, None, "Mask file not found"
+    
+    try:
+        # Load mask image using the simple approach that works
+        mask = np.array(Image.open(mask_path))
+        print(f"Loading mask: {mask_path}, Shape: {mask.shape}")
+        
+        # Create image color generator for color extraction
+        image_colors = ImageColorGenerator(mask)
+        
+        success_msg = f"Mask loaded successfully using simple approach"
+        print(success_msg)
+        
+        return mask, image_colors, success_msg
+        
+    except Exception as e:
+        error_msg = f"Error loading mask from {mask_path}: {e}"
+        print(error_msg)
+        import traceback
+        traceback.print_exc()
+        return None, None, error_msg
+
 def create_persian_wordcloud(text_array, config_file="config.json", output_file=None):
     """
     Create a Persian word cloud from an array of strings
@@ -126,23 +154,15 @@ def create_persian_wordcloud(text_array, config_file="config.json", output_file=
     if font_path is None:
         print("Warning: No Persian font found. Using system default.")
     
-    # Get mask
+    # Process mask with improved handling
     mask = None
     image_colors = None
     
-    if mask_path and os.path.exists(mask_path):
-        try:
-            mask_image = Image.open(mask_path)
-            mask = np.array(mask_image)
-            
-            # If using image color generator, create it
-            if color_mode == "image_colors":
-                image_colors = ImageColorGenerator(mask_image)
-            
-            print(f"Mask loaded from: {mask_path}")
-        except Exception as e:
-            print(f"Warning: Could not load mask from {mask_path}: {e}")
-            mask = None
+    if mask_path:
+        mask, image_colors, mask_status = process_mask_image(mask_path, debug=True)
+        if mask is None:
+            print(f"Mask processing failed: {mask_status}")
+            print("Continuing without mask...")
     
     # Create color function based on mode
     color_func = None
@@ -157,6 +177,8 @@ def create_persian_wordcloud(text_array, config_file="config.json", output_file=
         print("Using image color generator")
     
     # Create word cloud with complete settings
+    # Note: WordCloud uses mask differently - True areas are where words CAN be placed
+    # For WordCloud: True = areas where words CAN be placed, False = areas where words CANNOT be placed
     wordcloud = WordCloud(
         width=width,
         height=height,
@@ -173,7 +195,9 @@ def create_persian_wordcloud(text_array, config_file="config.json", output_file=
         random_state=random_state,
         collocations=collocations,
         repeat=repeat,
-        mode=mode
+        mode=mode,
+        contour_width=0,  # No contour
+        contour_color='black'
     )
     
     # Generate word cloud from frequencies
@@ -181,22 +205,14 @@ def create_persian_wordcloud(text_array, config_file="config.json", output_file=
     
     # Create matplotlib figure
     plt.figure(figsize=(12, 8))
-    plt.imshow(wordcloud, interpolation='bilinear')
     
-    # Draw border around mask if mask is used
+    # Show wordcloud with proper mask handling
     if mask is not None:
-        try:
-            from scipy import ndimage
-            # Create boundary from mask
-            mask_boundary = ndimage.binary_erosion(mask == 0, iterations=1) != (mask == 0)
-            
-            # Get the coordinates of the boundary
-            boundary_coords = np.where(mask_boundary)
-            if len(boundary_coords[0]) > 0:
-                # Draw the boundary
-                plt.plot(boundary_coords[1], boundary_coords[0], 'k-', linewidth=2, alpha=0.8)
-        except Exception as e:
-            print(f"Could not draw mask boundary: {e}")
+        # Show wordcloud normally - the mask is already applied during generation
+        plt.imshow(wordcloud, interpolation='bilinear')
+    else:
+        # No mask, just show wordcloud normally
+        plt.imshow(wordcloud, interpolation='bilinear')
     
     plt.axis('off')
     plt.tight_layout(pad=0)

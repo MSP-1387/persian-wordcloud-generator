@@ -1,14 +1,14 @@
 {
     "output_file": "persian_wordcloud.png",
     "width": 1000,
-    "height": 800,
+    "height": 808,
     "background_color": "white",
-    "mask_path": null,
-    "max_words": 1000,
-    "min_font_size": 8,
-    "max_font_size": 300,
+    "mask_path": "mask.png",
+    "max_words": 5000,
+    "min_font_size": 2,
+    "max_font_size": 800,
     "relative_scaling": 1.0,
-    "prefer_horizontal": 0.3,
+    "prefer_horizontal": 0.2,
     "random_state": 42,
     "collocations": false,
     "repeat": true,
@@ -35,9 +35,9 @@
         "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf"
     ],
     "smart_sizing": {
-        "extra_large_multiplier": 8,
-        "large_multiplier": 6,
-        "medium_multiplier": 4,
-        "small_multiplier": 2
+        "extra_large_multiplier": 10,
+        "large_multiplier": 8,
+        "medium_multiplier": 6,
+        "small_multiplier": 4
     }
 }
